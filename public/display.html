@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+const ws = new WebSocket(location.origin.replace("http", "ws"));
+
+let state;
+let page = 0;
+
+ws.onmessage = e => {
+  state = JSON.parse(e.data);
+  render();
+};
+
+setInterval(() => {
+  page = (page + 1) % 2;
+  render();
+}, 15000);
+
+function randomItems(arr, count) {
+  return arr.sort(() => 0.5 - Math.random()).slice(0, count);
+}
+
+function render() {
+  const { menuData, settings } = state;
+
+  document.body.style.background =
+    settings.backgroundType === "color"
+      ? settings.backgroundColor
+      : `url(${settings.backgroundImage}) center/cover`;
+
+  let html = "";
+
+  if (page === 0) {
+    const items = randomItems(menuData, 10);
+
+    html = `<div class="grid fade">` +
+      items.map(renderCard).join("") +
+      `</div>`;
+  } else {
+    const highlight = randomItems(menuData, 1)[0];
+    const rest = randomItems(menuData.filter(i => i.id !== highlight.id), 6);
+
+    html = `<div class="grid fade">
+      ${renderCard(highlight, true)}
+      ${rest.map(renderCard).join("")}
+    </div>`;
+  }
+
+  document.getElementById("app").innerHTML = html;
+}
+
+function renderCard(i, big = false) {
+  const sticker = i.sticker
+    ? `<div class="sticker ${i.stickerType}" style="background:${i.stickerColor}">
+        ${i.price}
+      </div>`
+    : `<div>${i.price}</div>`;
+
+  return `
+    <div class="card ${big ? "highlight" : ""}" 
+      style="background:${state.settings.cardColor};color:${state.settings.textColor}">
+      <img src="${i.image}">
+      <h3>${i.title}</h3>
+      <p>${i.text}</p>
+      ${sticker}
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
