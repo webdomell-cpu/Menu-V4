@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin – Artikel</title>
+<style>
+body { font-family: sans-serif; padding:20px; }
+.card { border:1px solid #ccc; padding:15px; margin-bottom:15px; border-radius:10px; }
+img { display:block; margin-top:10px; }
+.tabs button { margin-right:10px; }
+</style>
+</head>
+<body>
+
+<h1>Artikel Verwaltung</h1>
+
+<div class="tabs">
+  <button onclick="switchTab(0)">1–4</button>
+  <button onclick="switchTab(4)">5–8</button>
+  <button onclick="switchTab(8)">9–12</button>
+  <button onclick="switchTab(12)">13–16</button>
+</div>
+
+<div id="editor"></div>
+
+<button onclick="save()">💾 Speichern</button>
+
+<script>
+let data = [];
+let settings = {};
+let start = 0;
+
+fetch("/api/menu")
+  .then(r => r.json())
+  .then(d => {
+    data = d.menuData;
+    settings = d.settings;
+    render();
+  });
+
+function switchTab(s) {
+  start = s;
+  render();
+}
+
+function render() {
+  const el = document.getElementById("editor");
+  el.innerHTML = "";
+
+  data.slice(start, start + 4).forEach((item, i) => {
+    const idx = start + i;
+
+    el.innerHTML += `
+      <div class="card">
+        <h3>Artikel ${idx + 1}</h3>
+
+        Titel:<br>
+        <input value="${item.title}" maxlength="60"
+          onchange="update(${idx},'title',this.value)"><br>
+
+        Beschreibung:<br>
+        <textarea maxlength="180"
+          onchange="update(${idx},'text',this.value)">${item.text}</textarea><br>
+
+        Preis:<br>
+        <input value="${item.price}"
+          onchange="update(${idx},'price',this.value)"><br>
+
+        Bild:<br>
+        <input type="file" onchange="upload(event,${idx})"><br>
+        <img src="${item.image}" width="120">
+
+        <hr>
+
+        Störer aktiv:
+        <input type="checkbox" ${item.sticker ? "checked" : ""}
+          onchange="update(${idx},'sticker',this.checked)"><br>
+
+        Form:
+        <select onchange="update(${idx},'stickerType',this.value)">
+          <option value="circle" ${item.stickerType==="circle"?"selected":""}>Kreis</option>
+          <option value="star" ${item.stickerType==="star"?"selected":""}>Stern</option>
+        </select><br>
+
+        Farbe:
+        <input type="color" value="${item.stickerColor}"
+          onchange="update(${idx},'stickerColor',this.value)">
+      </div>
+    `;
+  });
+}
+
+function update(i, field, value) {
+  data[i][field] = value;
+}
+
+function upload(e, i) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+  reader.onload = ev => {
+    data[i].image = ev.target.result;
+    render();
+  };
+  reader.readAsDataURL(file);
+}
+
+function save() {
+  fetch("/api/menu", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ menuData: data, settings })
+  });
+  alert("Gespeichert!");
+}
+</script>
+
+</body>
+</html>
