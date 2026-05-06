@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Design Einstellungen</title>
+<style>
+body { font-family: sans-serif; padding:20px; }
+.block { margin-bottom:20px; }
+</style>
+</head>
+<body>
+
+<h1>Design Einstellungen</h1>
+
+<div class="block">
+  <label>Hintergrund-Modus:</label><br>
+  <select onchange="settings.backgroundType=this.value">
+    <option value="color">Farbe</option>
+    <option value="image">Bild</option>
+  </select>
+</div>
+
+<div class="block">
+  <label>Hintergrundfarbe:</label><br>
+  <input type="color" onchange="settings.backgroundColor=this.value">
+</div>
+
+<div class="block">
+  <label>Hintergrundbild (URL):</label><br>
+  <input type="text" placeholder="https://..."
+    onchange="settings.backgroundImage=this.value">
+</div>
+
+<div class="block">
+  <label>Kartenfarbe:</label><br>
+  <input type="color" onchange="settings.cardColor=this.value">
+</div>
+
+<div class="block">
+  <label>Textfarbe:</label><br>
+  <input type="color" onchange="settings.textColor=this.value">
+</div>
+
+<button onclick="save()">💾 Speichern</button>
+
+<script>
+let data = [];
+let settings = {};
+
+fetch("/api/menu")
+  .then(r => r.json())
+  .then(d => {
+    data = d.menuData;
+    settings = d.settings;
+  });
+
+function save() {
+  fetch("/api/menu", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ menuData: data, settings })
+  });
+
+  alert("Design gespeichert!");
+}
+</script>
+
+</body>
+</html>
