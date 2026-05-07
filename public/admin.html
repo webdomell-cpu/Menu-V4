@@ -2,24 +2,58 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin – Artikel</title>
+<title>Admin V5</title>
+
 <style>
-body { font-family: sans-serif; padding:20px; }
-.card { border:1px solid #ccc; padding:15px; margin-bottom:15px; border-radius:10px; }
-img { display:block; margin-top:10px; }
-.tabs button { margin-right:10px; }
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  background: #111;
+  color: white;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  margin-right: 10px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.card {
+  background: #222;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
+
+input, textarea, select {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 6px;
+}
+
+img {
+  margin-top: 10px;
+  border-radius: 8px;
+}
 </style>
+
 </head>
 <body>
 
-<h1>Artikel Verwaltung</h1>
+<h1>Admin Panel – Version 5</h1>
 
 <div class="tabs">
-  <button onclick="switchTab(0)">1–4</button>
-  <button onclick="switchTab(4)">5–8</button>
-  <button onclick="switchTab(8)">9–12</button>
-  <button onclick="switchTab(12)">13–16</button>
+  <button onclick="switchTab(0)">Artikel 1–4</button>
+  <button onclick="switchTab(4)">Artikel 5–8</button>
+  <button onclick="switchTab(8)">Artikel 9–12</button>
+  <button onclick="switchTab(12)">Artikel 13–16</button>
 </div>
+
+<hr>
 
 <div id="editor"></div>
 
@@ -31,19 +65,19 @@ let settings = {};
 let start = 0;
 
 fetch("/api/menu")
-  .then(r => r.json())
-  .then(d => {
-    data = d.menuData;
-    settings = d.settings;
-    render();
-  });
+.then(r => r.json())
+.then(d => {
+  data = d.menuData;
+  settings = d.settings;
+  render();
+});
 
-function switchTab(s) {
+function switchTab(s){
   start = s;
   render();
 }
 
-function render() {
+function render(){
   const el = document.getElementById("editor");
   el.innerHTML = "";
 
@@ -52,64 +86,75 @@ function render() {
 
     el.innerHTML += `
       <div class="card">
+
         <h3>Artikel ${idx + 1}</h3>
 
-        Titel:<br>
-        <input value="${item.title}" maxlength="60"
-          onchange="update(${idx},'title',this.value)"><br>
+        <label>Titel</label>
+        <input value="${item.title}"
+          onchange="update(${idx},'title',this.value)">
 
-        Beschreibung:<br>
-        <textarea maxlength="180"
-          onchange="update(${idx},'text',this.value)">${item.text}</textarea><br>
+        <label>Beschreibung</label>
+        <textarea
+          onchange="update(${idx},'text',this.value)">${item.text}</textarea>
 
-        Preis:<br>
+        <label>Preis</label>
         <input value="${item.price}"
-          onchange="update(${idx},'price',this.value)"><br>
+          onchange="update(${idx},'price',this.value)">
 
-        Bild:<br>
-        <input type="file" onchange="upload(event,${idx})"><br>
+        <label>Bild Upload</label>
+        <input type="file" onchange="upload(event,${idx})">
+
         <img src="${item.image}" width="120">
 
         <hr>
 
-        Störer aktiv:
-        <input type="checkbox" ${item.sticker ? "checked" : ""}
-          onchange="update(${idx},'sticker',this.checked)"><br>
+        <h4>Highlight Einstellungen</h4>
 
-        Form:
-        <select onchange="update(${idx},'stickerType',this.value)">
-          <option value="circle" ${item.stickerType==="circle"?"selected":""}>Kreis</option>
-          <option value="star" ${item.stickerType==="star"?"selected":""}>Stern</option>
-        </select><br>
+        <label>
+          <input type="checkbox" ${item.highlight ? "checked" : ""}
+            onchange="update(${idx},'highlight',this.checked)">
+          Als Highlight anzeigen
+        </label>
 
-        Farbe:
-        <input type="color" value="${item.stickerColor}"
-          onchange="update(${idx},'stickerColor',this.value)">
+        <label>Animation</label>
+        <select onchange="update(${idx},'effect',this.value)">
+          <option value="zoom" ${item.effect==="zoom"?"selected":""}>Zoom</option>
+          <option value="pulse" ${item.effect==="pulse"?"selected":""}>Pulse</option>
+          <option value="float" ${item.effect==="float"?"selected":""}>Float</option>
+          <option value="parallax" ${item.effect==="parallax"?"selected":""}>Parallax</option>
+        </select>
+
       </div>
     `;
   });
 }
 
-function update(i, field, value) {
-  data[i][field] = value;
+function update(index, field, value){
+  data[index][field] = value;
 }
 
-function upload(e, i) {
+function upload(e, index){
   const file = e.target.files[0];
   const reader = new FileReader();
+
   reader.onload = ev => {
-    data[i].image = ev.target.result;
+    data[index].image = ev.target.result;
     render();
   };
+
   reader.readAsDataURL(file);
 }
 
-function save() {
+function save(){
   fetch("/api/menu", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ menuData: data, settings })
+    body: JSON.stringify({
+      menuData: data,
+      settings: settings
+    })
   });
+
   alert("Gespeichert!");
 }
 </script>
