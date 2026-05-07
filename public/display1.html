@@ -1,21 +1,52 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html>
+<head>
 <link rel="stylesheet" href="style.css">
 <script src="/socket.io/socket.io.js"></script>
-</head><body>
+</head>
+<body>
+
 <div class="grid" id="menu"></div>
-<script src="socket.js"></script><script src="app.js"></script>
+
+<script src="socket.js"></script>
+<script src="app.js"></script>
+
 <script>
-(async()=>{
-const data=await loadData();
-document.body.style.setProperty("--bg",data.settings.background);
-document.body.style.setProperty("--card",data.settings.cardColor);
-document.body.style.setProperty("--text",data.settings.textColor);
-const menu=document.getElementById("menu");
-data.menu.slice(0,10).forEach(i=>{
-const d=document.createElement("div");
-d.className="card";
-d.innerHTML=`<img src="${i.image}"><h3>${i.title}</h3><p>${i.text}</p><div class="price">${i.price}</div>`;
-menu.appendChild(d);
-});
+(async () => {
+  const data = await loadData();
+
+  document.body.style.setProperty("--bg", data.settings.background);
+  document.body.style.setProperty("--text", data.settings.textColor);
+
+  const menu = document.getElementById("menu");
+
+  (data.menu || []).slice(0,10).forEach(item => {
+
+    const div = document.createElement("div");
+    div.className = "card";
+
+    const sticker = item.sticker?.enabled
+      ? `<div class="price-sticker ${item.sticker.type}" style="background:${item.sticker.color}">
+          ${item.price}
+        </div>`
+      : `<div>${item.price}</div>`;
+
+    const label = item.label
+      ? `<div class="label">${item.label}</div>`
+      : "";
+
+    div.innerHTML = `
+      ${label}
+      <img src="${item.image}">
+      <h3>${item.title}</h3>
+      <p>${item.text}</p>
+      ${sticker}
+    `;
+
+    menu.appendChild(div);
+  });
 })();
-</script></body></html>
+</script>
+
+</body>
+</html>
