@@ -1,31 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
+<!DOCTYPE html><html><head>
 <link rel="stylesheet" href="style.css">
-<title>Display 1</title>
-</head>
-<body>
-
+<script src="/socket.io/socket.io.js"></script>
+</head><body>
 <div class="grid" id="menu"></div>
-
+<script src="socket.js"></script><script src="app.js"></script>
 <script>
-fetch("/api/menu")
-.then(r=>r.json())
-.then(d=>{
-  const items = d.menuData.slice(0,10);
-
-  document.getElementById("menu").innerHTML =
-    items.map(i=>`
-      <div class="card">
-        <img src="${i.image}">
-        <h3>${i.title}</h3>
-        <p>${i.text}</p>
-        <div class="sticker">${i.price}</div>
-      </div>
-    `).join("");
+(async()=>{
+const data=await loadData();
+document.body.style.setProperty("--bg",data.settings.background);
+document.body.style.setProperty("--card",data.settings.cardColor);
+document.body.style.setProperty("--text",data.settings.textColor);
+const menu=document.getElementById("menu");
+data.menu.slice(0,10).forEach(i=>{
+const d=document.createElement("div");
+d.className="card";
+d.innerHTML=`<img src="${i.image}"><h3>${i.title}</h3><p>${i.text}</p><div class="price">${i.price}</div>`;
+menu.appendChild(d);
 });
-</script>
-
-</body>
-</html>
+})();
+</script></body></html>

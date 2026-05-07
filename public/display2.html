@@ -1,63 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
+<!DOCTYPE html><html><head>
 <link rel="stylesheet" href="style.css">
-<title>Display 2</title>
-</head>
-<body>
-
+<script src="/socket.io/socket.io.js"></script>
+</head><body>
 <div id="highlight"></div>
-<div class="grid" id="rest"></div>
-
+<script src="socket.js"></script><script src="app.js"></script>
 <script>
-let state;
-let index = 0;
-
-fetch("/api/menu")
-.then(r=>r.json())
-.then(d=>{
-  state = d;
-  render();
-
-  setInterval(()=>{
-    index++;
-    render();
-  },15000);
-});
-
-function render(){
-  const highlights = state.menuData.filter(i=>i.highlight);
-
-  if(highlights.length === 0){
-    document.getElementById("highlight").innerHTML = "<h2>Keine Highlights gesetzt</h2>";
-    return;
-  }
-
-  const item = highlights[index % highlights.length];
-
-  document.getElementById("highlight").innerHTML = `
-    <div class="card highlight ${item.effect}">
-      <img src="${item.image}">
-      <h1>${item.title}</h1>
-      <p>${item.text}</p>
-      <div class="sticker">${item.price}</div>
-    </div>
-  `;
-
-  const rest = state.menuData.slice(10,16);
-
-  document.getElementById("rest").innerHTML =
-    rest.map(i=>`
-      <div class="card">
-        <img src="${i.image}">
-        <h3>${i.title}</h3>
-        <p>${i.text}</p>
-        <div class="sticker">${i.price}</div>
-      </div>
-    `).join("");
-}
-</script>
-
-</body>
-</html>
+(async()=>{
+const data=await loadData();
+const h=getHighlights(data.menu);
+let i=0;
+setInterval(()=>{
+const item=h[i];
+document.getElementById("highlight").innerHTML=
+`<div class="card"><h1>${item?.title||""}</h1><img src="${item?.image||""}"></div>`;
+i=(i+1)%h.length;
+},5000);
+})();
+</script></body></html>

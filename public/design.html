@@ -1,120 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Design V5</title>
-
-<style>
-body {
-  font-family: sans-serif;
-  background: #111;
-  color: white;
-  padding: 20px;
-}
-
-.block {
-  margin-bottom: 20px;
-}
-
-input, select {
-  width: 100%;
-  padding: 8px;
-}
-</style>
-</head>
-<body>
-
-<h1>Design Einstellungen V5</h1>
-
-<div class="block">
-  <label>Hintergrund-Modus</label>
-  <select onchange="settings.bgType=this.value">
-    <option value="color">Farbe</option>
-    <option value="image">Bild</option>
-  </select>
-</div>
-
-<div class="block">
-  <label>Hintergrundfarbe</label>
-  <input type="color" onchange="settings.bgColor=this.value">
-</div>
-
-<div class="block">
-  <label>Hintergrundbild URL</label>
-  <input type="text" placeholder="https://..."
-    onchange="settings.bgImage=this.value">
-</div>
-
-<div class="block">
-  <label>Kartenfarbe</label>
-  <input type="color" onchange="settings.cardColor=this.value">
-</div>
-
-<div class="block">
-  <label>Textfarbe</label>
-  <input type="color" onchange="settings.textColor=this.value">
-</div>
-
-<hr>
-
-<h2>Preis-Störer Design</h2>
-
-<div class="block">
-  <label>Störer aktiv global</label>
-  <select onchange="settings.stickerMode=this.value">
-    <option value="simple">Einfach</option>
-    <option value="badge">Mit Störer</option>
-  </select>
-</div>
-
-<div class="block">
-  <label>Form</label>
-  <select onchange="settings.stickerShape=this.value">
-    <option value="circle">Kreis</option>
-    <option value="star">Stern</option>
-  </select>
-</div>
-
-<div class="block">
-  <label>Farbe</label>
-  <input type="color" onchange="settings.stickerColor=this.value">
-</div>
-
-<div class="block">
-  <label>Animation</label>
-  <select onchange="settings.stickerAnim=this.value">
-    <option value="pulse">Pulse</option>
-    <option value="bounce">Bounce</option>
-    <option value="spin">Spin</option>
-  </select>
-</div>
-
-<button onclick="save()">💾 Speichern</button>
-
+<!DOCTYPE html><html><body>
+<h2>Design</h2>
+<input id="bg" type="color"><input id="card" type="color"><input id="text" type="color">
+<button onclick="save()">Save</button>
 <script>
-let data = [];
-let settings = {};
-
-fetch("/api/menu")
-.then(r=>r.json())
-.then(d=>{
-  data = d.menuData;
-  settings = d.settings || {};
-});
-
-function save(){
-  fetch("/api/menu",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      menuData: data,
-      settings: settings
-    })
-  });
-
-  alert("Design gespeichert!");
+async function save(){
+const d=await fetch("/data").then(r=>r.json());
+d.settings.background=bg.value;
+d.settings.cardColor=card.value;
+d.settings.textColor=text.value;
+await fetch("/save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});
 }
-</script>
-
-</body>
-</html>
+</script></body></html>
