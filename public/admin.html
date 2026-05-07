@@ -1,12 +1,50 @@
-<!DOCTYPE html><html><body>
+<!DOCTYPE html>
+<html>
+<body>
+
 <h2>Admin</h2>
-<input id="t" placeholder="Titel"><input id="p" placeholder="Preis"><input id="i" placeholder="Bild URL">
+
+<input id="title" placeholder="Titel"><br>
+<input id="price" placeholder="Preis"><br>
+<input id="image" placeholder="Bild URL"><br>
+
+<label>Highlight <input type="checkbox" id="highlight"></label><br>
+
+<select id="stickerType">
+  <option value="circle">Circle</option>
+  <option value="badge">Badge</option>
+</select>
+
+<input type="color" id="color"><br>
+
 <button onclick="save()">Speichern</button>
+
 <script>
-async function save(){
-const d=await fetch("/data").then(r=>r.json());
-d.menu.push({title:t.value,price:p.value,image:i.value,text:"Beschreibung",highlight:false});
-await fetch("/save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});
-alert("Saved");
+async function save() {
+  const data = await fetch("/data").then(r => r.json());
+
+  data.menu.push({
+    title: title.value,
+    text: "Beschreibung",
+    price: price.value,
+    image: image.value,
+    highlight: highlight.checked,
+    sticker: {
+      enabled: true,
+      type: stickerType.value,
+      color: color.value
+    }
+  });
+
+  await fetch("/save", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+
+  alert("Gespeichert!");
 }
-</script></body></html>
+</script>
+
+</body>
+</html>
