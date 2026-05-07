@@ -1,13 +1,28 @@
-<!DOCTYPE html><html><body>
+<!DOCTYPE html>
+<html>
+<body>
+
 <h2>Design</h2>
-<input id="bg" type="color"><input id="card" type="color"><input id="text" type="color">
-<button onclick="save()">Save</button>
+
+<input id="bg" type="color"><br>
+<input id="text" type="color"><br>
+
+<button onclick="save()">Speichern</button>
+
 <script>
-async function save(){
-const d=await fetch("/data").then(r=>r.json());
-d.settings.background=bg.value;
-d.settings.cardColor=card.value;
-d.settings.textColor=text.value;
-await fetch("/save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)});
+async function save() {
+  const data = await fetch("/data").then(r => r.json());
+
+  data.settings.background = bg.value;
+  data.settings.textColor = text.value;
+
+  await fetch("/save", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
 }
-</script></body></html>
+</script>
+
+</body>
+</html>
