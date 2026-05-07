@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="style.css">
+<title>Display 1</title>
+</head>
+<body>
+
+<div class="grid" id="menu"></div>
+
+<script>
+fetch("/api/menu")
+.then(r=>r.json())
+.then(d=>{
+  const items = d.menuData.slice(0,10);
+
+  document.getElementById("menu").innerHTML =
+    items.map(i=>`
+      <div class="card">
+        <img src="${i.image}">
+        <h3>${i.title}</h3>
+        <p>${i.text}</p>
+        <div class="sticker">${i.price}</div>
+      </div>
+    `).join("");
+});
+</script>
+
+</body>
+</html>
