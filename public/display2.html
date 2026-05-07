@@ -1,19 +1,40 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html>
+<head>
 <link rel="stylesheet" href="style.css">
 <script src="/socket.io/socket.io.js"></script>
-</head><body>
+</head>
+<body>
+
 <div id="highlight"></div>
-<script src="socket.js"></script><script src="app.js"></script>
+
+<script src="socket.js"></script>
+<script src="app.js"></script>
+
 <script>
-(async()=>{
-const data=await loadData();
-const h=getHighlights(data.menu);
-let i=0;
-setInterval(()=>{
-const item=h[i];
-document.getElementById("highlight").innerHTML=
-`<div class="card"><h1>${item?.title||""}</h1><img src="${item?.image||""}"></div>`;
-i=(i+1)%h.length;
-},5000);
+(async () => {
+  const data = await loadData();
+  const highlights = getHighlights(data.menu);
+
+  let i = 0;
+
+  function show() {
+    const item = highlights[i] || {};
+
+    document.getElementById("highlight").innerHTML = `
+      <div class="card">
+        <h1>${item.title || ""}</h1>
+        <img src="${item.image || ""}">
+      </div>
+    `;
+
+    i = (i + 1) % highlights.length;
+  }
+
+  show();
+  setInterval(show, 15000);
 })();
-</script></body></html>
+</script>
+
+</body>
+</html>
