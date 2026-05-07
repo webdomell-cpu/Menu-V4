@@ -1,11 +1,20 @@
-<!DOCTYPE html><html><body>
+<!DOCTYPE html>
+<html>
+<body>
+
 <h2>Remote</h2>
-<button onclick="m('morning')">Frühstück</button>
-<button onclick="m('lunch')">Mittag</button>
-<button onclick="m('evening')">Abend</button>
-<button onclick="m('night')">Nacht</button>
+
+<button onclick="reload()">Reload Displays</button>
+
 <script>
-function m(mode){
-fetch("/remote",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode})});
+function reload() {
+  fetch("/remote", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ reload: true })
+  });
 }
-</script></body></html>
+</script>
+
+</body>
+</html>
