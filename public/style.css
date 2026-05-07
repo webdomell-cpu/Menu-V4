@@ -1,62 +1,83 @@
 body {
-  margin: 0;
-  width: 1080px;
-  height: 1920px;
   font-family: sans-serif;
-  overflow: hidden;
+  margin: 0;
+  padding: 10px;
+  background: #111;
+  color: white;
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(5, 1fr);
-  gap: 20px;
-  padding: 20px;
+  gap: 10px;
 }
 
 .card {
-  position: relative;
-  border-radius: 20px;
+  background: #222;
   padding: 10px;
-  transition: 0.5s;
+  border-radius: 12px;
+  position: relative;
 }
 
-.card img {
+img {
   width: 100%;
-  height: 140px;
+  height: 150px;
   object-fit: cover;
   border-radius: 10px;
-}
-
-.highlight {
-  grid-column: span 2;
-  height: 500px;
 }
 
 .sticker {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  padding: 15px;
+  background: red;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 50%;
   font-weight: bold;
-  animation: pulse 2s infinite;
 }
 
-.circle {
-  border-radius: 50%;
+/* Highlight */
+.highlight img {
+  height: 300px;
+}
+
+/* Animationen */
+
+.zoom img {
+  animation: zoom 8s infinite alternate;
+}
+
+@keyframes zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+.pulse img {
+  animation: pulse 3s infinite;
 }
 
 @keyframes pulse {
   0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  50% { transform: scale(1.05); }
   100% { transform: scale(1); }
 }
 
-.fade {
-  animation: fade 1s;
+.float img {
+  animation: float 4s infinite ease-in-out;
 }
 
-@keyframes fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+.parallax img {
+  animation: parallax 10s infinite alternate;
+}
+
+@keyframes parallax {
+  from { transform: scale(1.1); }
+  to { transform: scale(1.2) translateY(-20px); }
 }
