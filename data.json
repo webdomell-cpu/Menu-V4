@@ -1,8 +1,21 @@
 {
-  "menu": [],
+  "menu": [
+    {
+      "title": "Burger Deluxe",
+      "text": "Saftig gegrillt mit Käse",
+      "price": "8.90€",
+      "image": "https://images.unsplash.com/photo-1550547660-d9450f859349",
+      "label": "Beliebt",
+      "highlight": true,
+      "sticker": {
+        "enabled": true,
+        "type": "circle",
+        "color": "#ff3b3b"
+      }
+    }
+  ],
   "settings": {
-    "background": "#111",
-    "cardColor": "#222",
-    "textColor": "#fff"
+    "background": "#111111",
+    "textColor": "#ffffff"
   }
 }
