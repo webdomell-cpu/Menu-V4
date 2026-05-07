@@ -1,3 +1,7 @@
-const socket=io();
-socket.on("update",()=>location.reload());
-socket.on("remote",(d)=>{window.forceMode=d.mode;location.reload();});
+const socket = io();
+
+socket.on("update", () => location.reload());
+
+socket.on("remote", (data) => {
+  console.log("Remote:", data);
+});
