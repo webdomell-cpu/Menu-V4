@@ -1,12 +1,12 @@
 {
-  "name": "menu-system-v4",
-  "version": "4.0.0",
-  "main": "server/server.js",
+  "name": "menu-system-v5",
+  "version": "1.0.0",
+  "description": "Digital Menu Board V5",
+  "main": "server.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "ws": "^8.13.0"
+    "express": "^4.18.2"
   }
 }
