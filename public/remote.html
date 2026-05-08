@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html>
-<body>
-
-<h2>Remote</h2>
-
-<button onclick="reload()">Reload Displays</button>
+<button onclick="reload()">Reload</button>
 
 <script>
-function reload() {
-  fetch("/remote", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({ reload: true })
-  });
+function reload(){
+fetch("/remote",{method:"POST"});
 }
 </script>
-
-</body>
-</html>
