@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+<div id="menu" class="grid portrait"></div>
+
+<script src="socket.js"></script>
+<script src="app.js"></script>
+
+<script>
+(async ()=>{
+const d=await fetch("/data").then(r=>r.json());
+
+document.body.style.setProperty("--bg",d.settings.background);
+document.body.style.setProperty("--text",d.settings.textColor);
+
+const menu=document.getElementById("menu");
+
+d.menu.slice(0,10).forEach(item=>{
+if(!isVisible(item,d.settings)) return;
+
+const div=document.createElement("div");
+div.className="card";
+
+div.innerHTML=`
+${item.label?`<div class="label">${item.label}</div>`:""}
+<img src="${item.image||""}">
+<h3>${item.title||""}</h3>
+<p>${item.text||""}</p>
+<div class="price">${item.price||""}</div>
+`;
+
+menu.appendChild(div);
+});
+})();
+</script>
+
+</body>
+</html>
