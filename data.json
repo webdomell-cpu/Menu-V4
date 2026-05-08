@@ -1,21 +1,13 @@
 {
-  "menu": [
-    {
-      "title": "Burger Deluxe",
-      "text": "Saftig gegrillt mit Käse",
-      "price": "8.90€",
-      "image": "https://images.unsplash.com/photo-1550547660-d9450f859349",
-      "label": "Beliebt",
-      "highlight": true,
-      "sticker": {
-        "enabled": true,
-        "type": "circle",
-        "color": "#ff3b3b"
-      }
-    }
-  ],
+  "menu": [],
   "settings": {
     "background": "#111111",
-    "textColor": "#ffffff"
+    "textColor": "#ffffff",
+    "times": {
+      "morning": ["05:00", "11:00"],
+      "noon": ["11:00", "15:00"],
+      "evening": ["15:00", "22:00"],
+      "night": ["22:00", "05:00"]
+    }
   }
 }
