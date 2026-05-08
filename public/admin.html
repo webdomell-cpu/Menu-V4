@@ -4,45 +4,63 @@
 
 <h2>Admin</h2>
 
-<input id="title" placeholder="Titel"><br>
-<input id="price" placeholder="Preis"><br>
-<input id="image" placeholder="Bild URL"><br>
+<select id="index"></select>
 
-<label>Highlight <input type="checkbox" id="highlight"></label><br>
+<input id="title" placeholder="Titel">
+<input id="price" placeholder="Preis">
+<input type="file" id="file">
 
-<select id="stickerType">
-  <option value="circle">Circle</option>
-  <option value="badge">Badge</option>
-</select>
+<label>Highlight <input type="checkbox" id="highlight"></label>
 
-<input type="color" id="color"><br>
+<h3>Zeit</h3>
+<label>Morgen <input type="checkbox" id="morning"></label>
+<label>Mittag <input type="checkbox" id="noon"></label>
+<label>Abend <input type="checkbox" id="evening"></label>
+<label>Nacht <input type="checkbox" id="night"></label>
 
 <button onclick="save()">Speichern</button>
 
 <script>
-async function save() {
-  const data = await fetch("/data").then(r => r.json());
+for(let i=0;i<16;i++){
+index.innerHTML+=`<option value="${i}">Artikel ${i+1}</option>`;
+}
 
-  data.menu.push({
-    title: title.value,
-    text: "Beschreibung",
-    price: price.value,
-    image: image.value,
-    highlight: highlight.checked,
-    sticker: {
-      enabled: true,
-      type: stickerType.value,
-      color: color.value
-    }
-  });
+let data;
 
-  await fetch("/save", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(data)
-  });
+(async()=>{
+data=await fetch("/data").then(r=>r.json());
+if(!data.menu.length) data.menu=Array(16).fill({});
+})();
 
-  alert("Gespeichert!");
+async function save(){
+
+const file=document.getElementById("file").files[0];
+let image="";
+
+if(file){
+const form=new FormData();
+form.append("image",file);
+
+const res=await fetch("/upload",{method:"POST",body:form});
+const json=await res.json();
+image=json.path;
+}
+
+data.menu[index.value]={
+title:title.value,
+price:price.value,
+image:image,
+highlight:highlight.checked,
+times:{
+morning:morning.checked,
+noon:noon.checked,
+evening:evening.checked,
+night:night.checked
+}
+};
+
+await fetch("/save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+alert("Gespeichert");
 }
 </script>
 
